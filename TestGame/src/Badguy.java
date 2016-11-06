@@ -37,7 +37,7 @@ public class Badguy {
 	public void setYcoord(int newY) {
 		yCoord = newY;
 	}
-	
+
 	
 	
 

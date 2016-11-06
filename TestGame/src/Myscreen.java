@@ -3,9 +3,9 @@ import javax.swing.JFrame;
 public class Myscreen extends JFrame {
 
 	public Myscreen() {
-		this.setSize(600,400);
+		this.setSize(1000,1000);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setTitle("Jay is cool");
+		this.setTitle("Flawless Wallace");
 		this.setVisible(true);
 	}
 

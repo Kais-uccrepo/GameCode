@@ -10,8 +10,14 @@ public class Mycanvas extends Canvas implements KeyListener,MouseListener {
 
 	// MHOEL - create image - default looking right
 	String imgname = "testassets-master/right.png";
+	String vilimg = "testassets-master/vil1.png";
+	int timeticker = 25;
+	int timer = 0;
+	//int linkspeedx = 0;
+	//int linkspeedy = 0;
 	
 	Image poke = Toolkit.getDefaultToolkit().getImage(imgname); 
+	Image vil = Toolkit.getDefaultToolkit().getImage(vilimg);
 	int x = 10;
 	int y = 10;
 	//Rectangle rect = new Rectangle(200,300,100,100);
@@ -20,7 +26,7 @@ public class Mycanvas extends Canvas implements KeyListener,MouseListener {
 	Badguy badguys[] = new Badguy[5];
 
 	public Mycanvas() {
-		this.setSize(600,400);
+		this.setSize(1000,1000);
 		
 		// MHOEL - set background to be white
 		this.setBackground(Color.white);
@@ -32,7 +38,7 @@ public class Mycanvas extends Canvas implements KeyListener,MouseListener {
 		// MHOEL - fill an array of stationary bad guys
 		Random rand = new Random();
 		for (int i = 0; i<5; i++) {
-			badguys[i] = new Badguy(rand.nextInt(600), rand.nextInt(400), 50, 50);
+			badguys[i] = new Badguy(rand.nextInt(this.getWidth()-55), rand.nextInt(this.getHeight()-55), 45, 51);
 		}
 		
 		playIt("testassets-master/storm.wav");
@@ -51,10 +57,16 @@ public class Mycanvas extends Canvas implements KeyListener,MouseListener {
 	@Override
 	public void keyPressed(KeyEvent pressEvent) {
 		if (x > this.getWidth()) {
-			x = x - 25;
+			x = -55;
 		}
 		if (y > this.getHeight()) {
-			y = y - 25;
+			y = -55;
+		}
+		if (x < -55) {
+			x = this.getWidth();
+		}
+		if (y < -55) {
+			y = this.getHeight();
 		}
 		
 		
@@ -67,11 +79,13 @@ public class Mycanvas extends Canvas implements KeyListener,MouseListener {
 			}
 			poke = Toolkit.getDefaultToolkit().getImage(imgname);
 			x = x + 5;
+			//linkspeedx = 5;
 		}
 		this.repaint();
 		
 		if (pressEvent.getKeyCode() == 37) {
 			x = x - 5;
+			//linkspeedx = -5;
 			if (imgname == "testassets-master/left.png") {
 				imgname = "testassets-master/runleft.png";
 			} else {
@@ -84,6 +98,7 @@ public class Mycanvas extends Canvas implements KeyListener,MouseListener {
 		
 		if (pressEvent.getKeyCode() == 38) {
 			y = y - 5;
+			//linkspeedy = -5;
 			if (imgname == "testassets-master/up.png") {
 				imgname = "testassets-master/uprun.png";
 			} else {
@@ -96,6 +111,7 @@ public class Mycanvas extends Canvas implements KeyListener,MouseListener {
 		
 		if (pressEvent.getKeyCode() == 40) {
 			y = y + 5;
+			//linkspeedy = 5;
 			if (imgname == "testassets-master/down.png") {
 				imgname = "testassets-master/downrun.png";
 			} else {
@@ -110,6 +126,7 @@ public class Mycanvas extends Canvas implements KeyListener,MouseListener {
 			poke = Toolkit.getDefaultToolkit().getImage(imgname);
 		}
 		this.repaint();
+		//linkrun();
 	}
 	
 	public boolean getContains(){
@@ -141,9 +158,9 @@ public class Mycanvas extends Canvas implements KeyListener,MouseListener {
 					break;
 				}
 				*/
-					if(hRect.contains(bg.getXcoord(), bg.getYcoord()) && imgname == "testassets-master/swordraise.png") {
-						bg.setXcoord(100000);
-						bg.setYcoord(100000);
+					if(hRect.contains(bg.getXcoord(), bg.getYcoord()) && imgname == "testassets-master/swoosh.png") {
+						bg.setXcoord(-100);
+						bg.setYcoord(-100);
 						this.repaint();
 						break;
 					}
@@ -151,12 +168,35 @@ public class Mycanvas extends Canvas implements KeyListener,MouseListener {
 
 		
 	}
-
+/*	
+	public void linkrun() {
+		x = x + //linkspeedx;
+		y = y + //linkspeedy;
+		this.repaint();
+	}
+*/
 	public void paint(Graphics g) {
 		
 		// MHOEL - draw stationary badguys
+		getHero();
+		
+		if (timer == timeticker) {
+			if(vilimg == "testassets-master/vil1.png") {
+				vilimg = "testassets-master/vil2.png";
+			}else if(vilimg == "testassets-master/vil2.png") {
+				vilimg = "testassets-master/vil1.png";
+			}
+			timer = 0;
+		}else{
+			timer+=1;
+		}
+		Image vil = Toolkit.getDefaultToolkit().getImage(vilimg);
+		this.repaint();
 		for (Badguy bg: badguys) {
-			g.fillRect(bg.getXcoord(), bg.getYcoord(), bg.getWidth(), bg.getHeight());
+			//g.fillRect(bg.getXcoord(), bg.getYcoord(), bg.getWidth(), bg.getHeight());
+			g.drawImage(vil, bg.getXcoord(), bg.getYcoord(), bg.getWidth(), bg.getHeight(),this);
+
+			
 		}	
 		//g.fillRect(x,y,95,99);
 		g.drawImage(poke,x,y,95,99,this);
@@ -171,7 +211,6 @@ public class Mycanvas extends Canvas implements KeyListener,MouseListener {
 		this.repaint();
 	}
 	public void mouseEntered(MouseEvent e) {
-		System.out.print("Hey, get back in here!");
 	}
 	public void mouseExited(MouseEvent e) {
 		System.out.print(e);
@@ -193,8 +232,19 @@ public class Mycanvas extends Canvas implements KeyListener,MouseListener {
 			poke = Toolkit.getDefaultToolkit().getImage(imgname);
 			this.repaint();
 			playIt("testassets-master/swordsound.wav");
+		}
+		/*
+		if (e.getKeyCode() == 37 || e.getKeyCode() == 39) {
+			//linkspeedx = 0;
 			
 		}
+		
+		if (e.getKeyCode() == 38 || e.getKeyCode() == 40) {
+			//linkspeedy = 0;
+		}
+		*/
 	}
+	
 
 }
+
